@@ -1,5 +1,5 @@
 [package]
-org = "ballerina"
+org = "xlib"
 name = "jsonschmea.validator"
 version = "1.0.0"
 authors = ["Ballerina"]
