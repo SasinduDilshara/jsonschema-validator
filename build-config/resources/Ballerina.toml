@@ -1,0 +1,17 @@
+[package]
+org = "ballerina"
+name = "jsonschmea.validator"
+version = "@toml.version@"
+authors = ["Ballerina"]
+keywords = ["jsonschema", "json"]
+repository = "https://github.com/SasinduDilshara/module-ballerina-jsonschema-vdalidator"
+distribution = "2201.11.0"
+
+[platform.java17]
+graalvmCompatible = true
+
+[[platform.java17.dependency]]
+groupId = "io.ballerina.stdlib"
+artifactId = "jsonschema-vdalidator-native"
+version = "@toml.version@"
+path = "../native/build/libs/jsonschema-validator-native-@project.version@.jar"
