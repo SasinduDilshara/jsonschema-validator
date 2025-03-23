@@ -24,6 +24,7 @@ description = 'Ballerina Json schema valdaitor Java Utils'
 dependencies {
     implementation group: 'org.ballerinalang', name: 'ballerina-lang', version: "${ballerinaLangVersion}"
     implementation group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
+    implementation group: 'com.networknt', name: 'json-schema-validator', version: '1.5.6'
 }
 
 compileJava {

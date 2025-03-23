@@ -1,5 +1,5 @@
 package io.ballerina.jsonschema.validator;
 
-public class validator {
+public class Validator {
     
 }
