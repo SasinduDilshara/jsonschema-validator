@@ -15,3 +15,9 @@ groupId = "io.ballerina.stdlib"
 artifactId = "jsonschema-vdalidator-native"
 version = "1.0.0"
 path = "../native/build/libs/jsonschema-validator-native-1.0.0.jar"
+
+[[platform.java17.dependency]]
+groupId = "com.networknt"
+artifactId = "json-schema-validator"
+version = "1.5.6"
+path = "../native/build/libs/json-schema-validator-1.5.6.jar"
