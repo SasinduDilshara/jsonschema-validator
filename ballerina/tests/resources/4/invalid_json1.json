@@ -1,0 +1,23 @@
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "age": 15,
+  "salary": 50000.50,
+  "preferences": {
+    "newsletter": true,
+    "theme": "light"
+  },
+  "tags": ["developer", "backend", "frontend", "devops", "qa", "ux"],
+  "profileImage": "invalid-base64",
+  "metadata": {
+    "role": "admin"
+  },
+  "contact": {
+    "street": "123 Main St",
+    "city": "Springfield",
+    "zip": "12345"
+  },
+  "status": "active",
+  "history": ["started", 2020, true]
+}

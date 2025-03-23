@@ -1,0 +1,19 @@
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "name": "Alice Smith",
+  "email": "not-an-email",
+  "age": 25,
+  "salary": 50000.50,
+  "preferences": {
+    "newsletter": true,
+    "theme": "light"
+  },
+  "tags": ["developer"],
+  "profileImage": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAgAB/0z1rAAAAABJRU5ErkJggg==",
+  "metadata": {
+    "role": "admin"
+  },
+  "contact": {},
+  "status": "active",
+  "history": ["started", 2020, false]
+}

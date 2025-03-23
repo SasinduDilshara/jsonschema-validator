@@ -13,4 +13,13 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
+import ballerina/jballerina.java;
 
+public isolated function validate(json jsonvalue, string jsonSchemaPath) returns error? {
+    return validateJson(jsonvalue.toJsonString(), jsonSchemaPath);
+}
+
+isolated function validateJson(string jsonString, string jsonSchemaPath) returns error? = @java:Method {
+    'class: "io.ballerina.jsonschema.validator.JsonSchemaValidator",
+    name: "validate"
+} external;

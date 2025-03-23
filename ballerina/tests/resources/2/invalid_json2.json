@@ -1,0 +1,15 @@
+{
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "name": "Alice Smith",
+    "email": "not-an-email",
+    "age": 25,
+    "preferences": {
+      "newsletter": false,
+      "theme": "light"
+    },
+    "tags": ["developer"],
+    "profileImage": "invalid-base64",
+    "metadata": {
+      "role@admin": "admin"
+    }
+  }

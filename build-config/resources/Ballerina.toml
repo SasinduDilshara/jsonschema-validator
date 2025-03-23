@@ -1,5 +1,5 @@
 [package]
-org = "ballerina"
+org = "xlib"
 name = "jsonschmea.validator"
 version = "@toml.version@"
 authors = ["Ballerina"]
@@ -15,3 +15,27 @@ groupId = "io.ballerina.stdlib"
 artifactId = "jsonschema-vdalidator-native"
 version = "@toml.version@"
 path = "../native/build/libs/jsonschema-validator-native-@project.version@.jar"
+
+[[platform.java17.dependency]]
+groupId = "com.networknt"
+artifactId = "json-schema-validator"
+version = "@networknt.version@"
+path = "./lib/json-schema-validator-@networknt.version@.jar"
+
+[[platform.java17.dependency]]
+groupId = "com.fasterxml.jackson.core"
+artifactId = "jackson-databind"
+version = "@jackson.version@"
+path = "./lib/jackson-databind-@jackson.version@.jar"
+
+[[platform.java17.dependency]]
+groupId = "com.fasterxml.jackson.core"
+artifactId = "jackson-core"
+version = "@jackson.version@"
+path = "./lib/jackson-core-@jackson.version@.jar"
+
+[[platform.java17.dependency]]
+groupId = "com.fasterxml.jackson.core"
+artifactId = "jackson-annotations"
+version = "@jackson.version@"
+path = "./lib/jackson-annotations-@jackson.version@.jar"

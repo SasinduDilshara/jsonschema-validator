@@ -1,0 +1,100 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Complex User Profile",
+    "description": "A schema representing a complex user profile with advanced validation rules.",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+        "description": "A UUID for the user."
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100,
+        "description": "The user's full name."
+      },
+      "email": {
+        "type": "string",
+        "format": "email",
+        "description": "The user's email address."
+      },
+      "age": {
+        "type": "integer",
+        "minimum": 18,
+        "maximum": 120,
+        "description": "The user's age. Must be between 18 and 120."
+      },
+      "preferences": {
+        "type": "object",
+        "properties": {
+          "newsletter": {
+            "type": "boolean",
+            "description": "Whether the user subscribes to the newsletter."
+          },
+          "theme": {
+            "type": "string",
+            "enum": ["light", "dark", "system"],
+            "default": "system",
+            "description": "The user's preferred theme."
+          }
+        },
+        "additionalProperties": false,
+        "required": ["newsletter"]
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20
+        },
+        "minItems": 1,
+        "maxItems": 5,
+        "uniqueItems": true,
+        "description": "A list of tags associated with the user."
+      },
+      "profileImage": {
+        "type": "string",
+        "contentMediaType": "image/png",
+        "contentEncoding": "base64",
+        "description": "The user's profile image encoded in base64."
+      },
+      "metadata": {
+        "type": "object",
+        "patternProperties": {
+          "^[a-zA-Z0-9_]+$": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Additional metadata about the user."
+      }
+    },
+    "required": ["id", "name", "email", "age"],
+    "allOf": [
+      {
+        "if": {
+          "properties": { "age": { "minimum": 60 } }
+        },
+        "then": {
+          "properties": { "preferences": { "required": ["theme"] } }
+        }
+      }
+    ],
+    "definitions": {
+      "address": {
+        "type": "object",
+        "properties": {
+          "street": { "type": "string" },
+          "city": { "type": "string" },
+          "zip": { "type": "string", "pattern": "^\\d{5}$" }
+        },
+        "required": ["street", "city", "zip"]
+      }
+    },
+    "dependentRequired": {
+      "preferences": ["tags"]
+    }
+  }

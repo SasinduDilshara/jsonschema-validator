@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Complex User Profile",
+  "description": "A schema representing a complex user profile with advanced validation rules.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "description": "A UUID for the user."
+    },
+    "auth": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "username": { "type": "string", "minLength": 5 }
+          },
+          "required": ["username"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string", "format": "email" }
+          },
+          "required": ["email"]
+        }
+      ]
+    },
+    "contact": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "phone": { "type": "string", "pattern": "^\\+\\d{1,3}\\d{9}$" }
+          },
+          "required": ["phone"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "address": { "type": "string", "minLength": 10 }
+          },
+          "required": ["address"]
+        }
+      ]
+    },
+    "age": {
+      "type": "integer",
+      "minimum": 18,
+      "maximum": 120,
+      "description": "The user's age. Must be between 18 and 120."
+    },
+    "preferences": {
+      "type": "object",
+      "properties": {
+        "newsletter": { "type": "boolean" },
+        "theme": {
+          "type": "string",
+          "enum": ["light", "dark", "system"]
+        }
+      },
+      "required": ["newsletter"]
+    }
+  },
+  "required": ["id", "auth", "contact", "age"],
+  "allOf": [
+    {
+      "if": {
+        "properties": { "age": { "minimum": 60 } }
+      },
+      "then": {
+        "properties": { "preferences": { "required": ["theme"] } }
+      }
+    }
+  ]
+}

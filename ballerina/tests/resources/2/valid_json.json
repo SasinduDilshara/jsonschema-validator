@@ -1,0 +1,15 @@
+{
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "age": 30,
+    "preferences": {
+      "newsletter": true,
+      "theme": "dark"
+    },
+    "tags": ["developer", "backend"],
+    "profileImage": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wcAAgAB/0z1rAAAAABJRU5ErkJggg==",
+    "metadata": {
+      "role": "admin"
+    }
+  }
