@@ -21,3 +21,9 @@ groupId = "com.networknt"
 artifactId = "json-schema-validator"
 version = "1.5.6"
 path = "./lib/json-schema-validator-1.5.6.jar"
+
+[[platform.java17.dependency]]
+groupId = "com.fasterxml.jackson.core"
+artifactId = "jackson-databind"
+version = "2.15.2"
+path = "./lib/json-schema-validator-2.15.2.jar"
