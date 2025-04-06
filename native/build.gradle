@@ -20,48 +20,94 @@ plugins {
 }
 
 description = 'Ballerina Json schema valdaitor Java Utils'
+//
+//dependencies {
+////    implementation group: 'org.ballerinalang', name: 'ballerina-lang', version: "${ballerinaLangVersion}"
+////    implementation group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
+////    implementation group: 'org.ballerinalang', name: 'value', version: "${ballerinaLangVersion}"
+//
+////    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+////    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonDatabindVersion}"
+////    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonDatabindVersion}"
+////
+////    // JAXB (for Java 11+)
+////    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+////    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
+////
+////    // Jackson for JSON Schema generation
+////    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+////    implementation 'com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.13.0'
+////    implementation 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.13.0'
+//
+////    // XJC task dependencies
+////    xjc 'org.glassfish.jaxb:jaxb-xjc:2.3.3'
+////    xjc 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
+//
+//    // JAXB API & Implementation (Jakarta EE)
+//
+//// JAXB API & Implementation (Jakarta EE)
+//
+////    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
+////    implementation 'com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.15.2'
+////    implementation 'com.networknt:json-schema-validator:1.5.6'
+//
+//    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+//    implementation 'com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.15.2'
+//    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.8'
+//    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+//    implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.15.2'
+//    implementation 'com.github.victools:jsonschema-generator:4.31.1'
+//    implementation 'org.glassfish.jaxb:jaxb-xjc:4.0.3'
+//    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+//
+//}
 
 dependencies {
-    implementation group: 'org.ballerinalang', name: 'ballerina-lang', version: "${ballerinaLangVersion}"
-    implementation group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
-    implementation group: 'org.ballerinalang', name: 'value', version: "${ballerinaLangVersion}"
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
+    implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.github.victools:jsonschema-generator:4.31.1'
 
-    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: "2.0.27"
-    implementation group: 'org.apache.pdfbox', name: 'pdfbox-tools', version: "2.0.27"
-//    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
-//    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonDatabindVersion}"
-//    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonDatabindVersion}"
-//
-//    // JAXB (for Java 11+)
-//    implementation 'javax.xml.bind:jaxb-api:2.3.1'
-//    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
-//
-//    // Jackson for JSON Schema generation
-//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
-//    implementation 'com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.13.0'
-//    implementation 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.13.0'
 
-//    // XJC task dependencies
-//    xjc 'org.glassfish.jaxb:jaxb-xjc:2.3.3'
-//    xjc 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
+    implementation 'org.glassfish.jaxb:jaxb-xjc:4.0.3'
 }
 
+// Task to generate Java classes from XSD
 
+task generateJaxbClasses {
+    def outputDir = file("${buildDir}/generated-sources/jaxb")
+    def schemaDir = file("src/main/resources/schema")
+    inputs.dir schemaDir
+    outputs.dir outputDir
+    doLast {
+        // Create output directory
+        outputDir.mkdirs()
+        // Find all XSD files
+        fileTree(dir: schemaDir).include('**/*.xsd').each { xsdFile ->
+            // Run XJC compiler
+            ant.taskdef(name: 'xjc',
+                    classname: 'com.sun.tools.xjc.XJCTask',
+                    classpath: configurations.runtimeClasspath.asPath)
+            ant.xjc(destdir: outputDir,
+                    package: 'com.example.generated',
+                    schema: xsdFile) {
+                arg(value: '-extension')
+                produces(dir: outputDir, includes: '**/*.java')
+            }
+        }
+    }
+}
 
-//task generateJaxbClasses {
-//    doLast {
-//        javaexec {
-//            main = 'com.sun.tools.xjc.XJCFacade'
-//            classpath = configurations.xjc
-//            args = [
-//                    '-d', 'src/generated/java',
-//                    '-p', 'com.example.schema',
-//                    '-verbose',
-//                    'src/main/resources/schema.xsd'
-//            ]
-//        }
-//    }
-//}
+// Add generated sources to Java compilation
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir}/generated-sources/jaxb"
+        }
+    }
+}
 
 compileJava {
     doFirst {
@@ -71,3 +117,5 @@ compileJava {
         classpath = files()
     }
 }
+
+//compileJava.dependsOn("generateJaxbClasses")

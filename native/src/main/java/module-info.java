@@ -17,9 +17,17 @@
  */
 
 module io.ballerina.jsonschema.validator {
-    requires io.ballerina.runtime;
-
-    requires org.apache.pdfbox;
-    requires org.apache.pdfbox.tools;
-    exports io.ballerina.jsonschema.validator;
+//    requires io.ballerina.runtime;
+    requires jakarta.xml.bind;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.databind;
+    requires com.github.victools.jsonschema.generator;
+    requires com.fasterxml.jackson.module.jakarta.xmlbind;
+//    requires com.fasterxml.jackson.module.jaxb;
+    requires java.xml;
+//    requires com.networknt.schema;
+//    requires com.fasterxml.jackson.databind;
+//    requires com.fasterxml.jackson.module.jakarta.xmlbind;
+    exports com.example.generated;
+    exports com.example.xsd;
 }

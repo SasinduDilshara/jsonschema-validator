@@ -1,34 +1,97 @@
 package com.example.xsd;
 
-import org.apache.pdfbox.tools.TextToPDF;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import java.io.StringReader;
-import java.io.Reader;
-import java.io.IOException;
+//import com.fasterxml.jackson.databind.AnnotationIntrospector;
+//import com.fasterxml.jackson.databind.JsonMappingException;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.type.TypeFactory;
+//import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
+//import javax.xml.bind.annotation.XmlElement;
 
-public class XsdToJsonSchema {
-    public static void main(String[] args) {
-        String text = "This is the text content that will be converted into a PDF.\n" +
-                "You can include multiple lines.\n" +
-                "No need for PDPageContentStream!";
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationIntrospector;
+import jakarta.xml.bind.annotation.XmlElement;  // Changed from javax to jakarta
 
-        try {
-            // Create a TextToPDF converter
-            TextToPDF textToPDF = new TextToPDF();
+import com.fasterxml.jackson.databind.jsonschema.JsonSchema;
 
-            // Convert String to Reader (not InputStream)
-            Reader reader = new StringReader(text); // or use InputStreamReader with ByteArrayInputStream
+import static java.lang.System.out;
+import static java.lang.System.err;
 
-            // Generate PDF document (now passing a Reader)
-            PDDocument document = textToPDF.createPDFFromText(reader);
+/**
+ * Generates JavaScript Object Notation (JSON) from Java classes
+ * with Java API for XML Binding (JAXB) annotations.
+ */
+public class XsdToJsonConverter
+{
+    /**
+     * Create instance of ObjectMapper with JAXB introspector
+     * and default type factory.
+     *
+     * @return Instance of ObjectMapper with JAXB introspector
+     *    and default type factory.
+     */
+//    private ObjectMapper createJaxbObjectMapper()
+//    {
+//        final ObjectMapper mapper = new ObjectMapper();
+//        final TypeFactory typeFactory = TypeFactory.defaultInstance();
+//        final AnnotationIntrospector introspector = new JaxbAnnotationIntrospector(typeFactory);
+//        // make deserializer use JAXB annotations (only)
+//        mapper.getDeserializationConfig().with(introspector);
+//        // make serializer use JAXB annotations (only)
+//        mapper.getSerializationConfig().with(introspector);
+//        return mapper;
+//    }
 
-            // Save the PDF
-            document.save("output_no_contentstream.pdf");
-            document.close();
+    private ObjectMapper createJaxbObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        JakartaXmlBindAnnotationIntrospector introspector = new JakartaXmlBindAnnotationIntrospector();
+        mapper.setAnnotationIntrospector(introspector);
+        return mapper;
+    }
 
-            System.out.println("PDF created successfully without PDPageContentStream!");
-        } catch (IOException e) {
-            e.printStackTrace();
+    /**
+     * Write out JSON Schema based upon Java source code in
+     * class whose fully qualified package and class name have
+     * been provided.
+     *
+     * @param mapper Instance of ObjectMapper from which to
+     *     invoke JSON schema generation.
+     * @param fullyQualifiedClassName Name of Java class upon
+     *    which JSON Schema will be extracted.
+     */
+    private void writeToStandardOutputWithDeprecatedJsonSchema(
+            final ObjectMapper mapper, final String fullyQualifiedClassName)
+    {
+        try
+        {
+            final JsonSchema jsonSchema = mapper.generateJsonSchema(Class.forName(fullyQualifiedClassName));
+            out.println(jsonSchema);
         }
+        catch (ClassNotFoundException cnfEx)
+        {
+            err.println("Unable to find class " + fullyQualifiedClassName);
+        }
+        catch (JsonMappingException jsonEx)
+        {
+            err.println("Unable to map JSON: " + jsonEx);
+        }
+    }
+
+    /**
+     * Accepts the fully qualified (full package) name of a
+     * Java class with JAXB annotations that will be used to
+     * generate a JSON schema.
+     *
+     * @param arguments One argument expected: fully qualified
+     *     package and class name of Java class with JAXB
+     *     annotations.
+     */
+    public static void main(String[] arguments)
+    {
+        final XsdToJsonConverter instance = new XsdToJsonConverter();
+        final String fullyQualifiedClassName = "com.example.generated.PersonDetails";
+        final ObjectMapper objectMapper = instance.createJaxbObjectMapper();
+        instance.writeToStandardOutputWithDeprecatedJsonSchema(objectMapper, fullyQualifiedClassName);
     }
 }
