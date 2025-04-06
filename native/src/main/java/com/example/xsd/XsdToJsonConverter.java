@@ -1,4 +1,4 @@
-package io.ballerina.jsonschema.validator;
+package com.example.xsd;
 
 import org.apache.pdfbox.tools.TextToPDF;
 import org.apache.pdfbox.pdmodel.PDDocument;
