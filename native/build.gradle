@@ -25,9 +25,43 @@ dependencies {
     implementation group: 'org.ballerinalang', name: 'ballerina-lang', version: "${ballerinaLangVersion}"
     implementation group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
     implementation group: 'org.ballerinalang', name: 'value', version: "${ballerinaLangVersion}"
-    implementation group: 'com.networknt', name: 'json-schema-validator', version: "${networkNtVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: "2.0.27"
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox-tools', version: "2.0.27"
+//    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+//    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonDatabindVersion}"
+//    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonDatabindVersion}"
+//
+//    // JAXB (for Java 11+)
+//    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+//    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
+//
+//    // Jackson for JSON Schema generation
+//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+//    implementation 'com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.13.0'
+//    implementation 'com.fasterxml.jackson.module:jackson-module-jsonSchema:2.13.0'
+
+//    // XJC task dependencies
+//    xjc 'org.glassfish.jaxb:jaxb-xjc:2.3.3'
+//    xjc 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
 }
+
+
+
+//task generateJaxbClasses {
+//    doLast {
+//        javaexec {
+//            main = 'com.sun.tools.xjc.XJCFacade'
+//            classpath = configurations.xjc
+//            args = [
+//                    '-d', 'src/generated/java',
+//                    '-p', 'com.example.schema',
+//                    '-verbose',
+//                    'src/main/resources/schema.xsd'
+//            ]
+//        }
+//    }
+//}
 
 compileJava {
     doFirst {

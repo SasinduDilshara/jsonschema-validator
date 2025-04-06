@@ -17,9 +17,9 @@
  */
 
 module io.ballerina.jsonschema.validator {
-    requires io.ballerina.lang.value;
     requires io.ballerina.runtime;
-    requires com.networknt.schema;
-    requires com.fasterxml.jackson.databind;
+
+    requires org.apache.pdfbox;
+    requires org.apache.pdfbox.tools;
     exports io.ballerina.jsonschema.validator;
 }
