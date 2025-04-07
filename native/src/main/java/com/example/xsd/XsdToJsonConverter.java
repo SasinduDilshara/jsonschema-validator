@@ -1,11 +1,5 @@
 package com.example.xsd;
 
-//import com.fasterxml.jackson.databind.AnnotationIntrospector;
-//import com.fasterxml.jackson.databind.JsonMappingException;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.fasterxml.jackson.databind.type.TypeFactory;
-//import com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector;
-//import javax.xml.bind.annotation.XmlElement;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

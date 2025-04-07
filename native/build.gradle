@@ -63,6 +63,10 @@ description = 'Ballerina Json schema valdaitor Java Utils'
 //
 //}
 
+configurations {
+    jaxb
+}
+
 dependencies {
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
     implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
@@ -70,31 +74,78 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
     implementation 'com.github.victools:jsonschema-generator:4.31.1'
 
+    jaxb 'org.glassfish.jaxb:jaxb-xjc:4.0.3'
+    jaxb 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
 
     implementation 'org.glassfish.jaxb:jaxb-xjc:4.0.3'
 }
 
 // Task to generate Java classes from XSD
 
+//task generateJaxbClasses {
+//    def outputDir = file("${buildDir}/generated-sources/jaxb")
+//    def schemaDir = file("src/main/resources/schema")
+//    inputs.dir schemaDir
+//    outputs.dir outputDir
+//    doLast {
+//        // Create output directory
+//        outputDir.mkdirs()
+//        // Find all XSD files
+//        fileTree(dir: schemaDir).include('**/*.xsd').each { xsdFile ->
+//            // Run XJC compiler
+//            ant.taskdef(name: 'xjc',
+//                    classname: 'com.sun.tools.xjc.XJCTask',
+//                    classpath: configurations.runtimeClasspath.asPath)
+//            ant.xjc(destdir: outputDir,
+//                    package: 'com.example.generated',
+//                    schema: xsdFile) {
+//                arg(value: '-extension')
+//                produces(dir: outputDir, includes: '**/*.java')
+//            }
+//        }
+//    }
+//}
+//
+
 task generateJaxbClasses {
     def outputDir = file("${buildDir}/generated-sources/jaxb")
     def schemaDir = file("src/main/resources/schema")
-    inputs.dir schemaDir
-    outputs.dir outputDir
+    def episodeFile = file("${buildDir}/generated-sources/jaxb/META-INF/sun-jaxb.episode")
+
+    inputs.dir(schemaDir)
+    outputs.dir(outputDir)
+    outputs.file(episodeFile)
+
     doLast {
-        // Create output directory
         outputDir.mkdirs()
-        // Find all XSD files
-        fileTree(dir: schemaDir).include('**/*.xsd').each { xsdFile ->
-            // Run XJC compiler
-            ant.taskdef(name: 'xjc',
-                    classname: 'com.sun.tools.xjc.XJCTask',
-                    classpath: configurations.runtimeClasspath.asPath)
+        episodeFile.parentFile.mkdirs()
+
+        // Collect all XSD files
+        def xsdFiles = fileTree(dir: schemaDir).include('**/*.xsd').files
+
+        ant.taskdef(name: 'xjc', classname: 'com.sun.tools.xjc.XJCTask',
+                classpath: configurations.jaxb.asPath)
+
+        // Generate episode file for multi-schema compilation
+        ant.xjc(destdir: outputDir,
+                package: 'com.example.generated',
+                extension: true) {
+            arg(line: '-episode ' + episodeFile)
+            arg(value: '-verbose')
+            schema(dir: schemaDir, includes: '**/*.xsd')
+        }
+
+        // Generate classes for each XSD with proper dependency handling
+        xsdFiles.each { xsdFile ->
             ant.xjc(destdir: outputDir,
                     package: 'com.example.generated',
-                    schema: xsdFile) {
-                arg(value: '-extension')
-                produces(dir: outputDir, includes: '**/*.java')
+                    extension: true) {
+                arg(value: '-nv')  // no validation of input schema
+                arg(value: '-catalog')
+                arg(value: "${schemaDir}/catalog.xml")  // for resolving imports
+                arg(value: '-verbose')
+                arg(value: '-readOnly')
+                schema(file: xsdFile)
             }
         }
     }
@@ -118,4 +169,4 @@ compileJava {
     }
 }
 
-//compileJava.dependsOn("generateJaxbClasses")
+compileJava.dependsOn("generateJaxbClasses")
